@@ -1,0 +1,159 @@
+#include <iostream>
+using namespace std;
+
+class Student {
+    int age, reg_no, semester, roll_no, attendance;
+    string name, parentage;
+    int marks[5];
+    int total;
+    float per;
+
+public:
+    void get_details() {
+        cout << "Enter name of the student: "; cin >> name;
+        cout << "Enter age: "; cin >> age;
+        cout << "Enter registration no.: "; cin >> reg_no;
+        cout << "Enter semester: "; cin >> semester;
+        cout << "Enter roll no.: "; cin >> roll_no;
+        cout << "Enter parentage: "; cin >> parentage;
+        cout << "Enter Attendance (out of 100): "; cin >> attendance;
+
+        total = 0;  
+        for (int j = 0; j < 5; j++) {
+            cout << "Enter Subject " << (j + 1) << " marks: ";
+            cin >> marks[j];
+            total += marks[j];
+        }
+        per = total / 5.0;  
+    }
+
+    void show_details()  {
+        cout << "\n--- Student Details ---\n";
+        cout << "Name: " << name << "\nAge: " << age;
+        cout << "\nRegistration no.: " << reg_no;
+        cout << "\nSemester: " << semester;
+        cout << "\nRoll no.: " << roll_no;
+        cout << "\nParentage: " << parentage;
+        cout << "\nAttendance: " << attendance;
+        cout << "\nTotal Marks: " << total;
+        cout << "\nPercentage: " << per << "%\n";
+    }
+
+    string get_name() {
+        return name;
+    }
+
+    int get_roll_no() {
+        return roll_no;
+    }
+
+    int get_attendance() {
+        return attendance;
+    }
+
+    float get_percentage() {
+        return per;
+    }
+
+    void print_attendance() {
+        cout << "\t" << roll_no << "\t\t" << name << "\t\t" << attendance << "%\n";
+    }
+};
+
+void show_top_5(Student students[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (students[j].get_percentage() > students[i].get_percentage()) {
+                Student temp = students[i];
+                students[i] = students[j];
+                students[j] = temp;
+            }
+        }
+    }
+    cout << "\nTop 5 Students:\n";
+    cout << "Roll No\t\tName\t\tPercentage\n";
+    for (int i = 0; i < (n < 5 ? n : 5); i++) {
+        cout << students[i].get_roll_no() << "\t\t" << students[i].get_name() << "\t\t" << students[i].get_percentage() << "%\n";
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter number of students: ";
+    cin >> n;
+
+    Student students[n];
+    for (int i = 0; i < n; i++) {
+        cout << "\nEnter details for student " << i + 1 << ":\n";
+        students[i].get_details();
+    }
+
+    int choice;
+    do {
+        cout << "\nWhat would you like to do?\n";
+        cout << "1. Show Details\n2. Show Names\n3. Show Roll Numbers\n4. Print Attendance\n";
+        cout << "5. Show Students with Attendance Shortage\n6. Show Top 5 Students\n7. Show Percentages\n";
+        cout << "8. Show Students Above 90%\n9. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                for (int i = 0; i < n; i++) {
+                    students[i].show_details();
+                }
+                break;
+            case 2:
+                cout << "\nNames of students:\n";
+                for (int i = 0; i < n; i++) {
+                    cout << students[i].get_name() << "\n";
+                }
+                break;
+            case 3:
+                cout << "\nRoll Numbers of students:\n";
+                for (int i = 0; i < n; i++) {
+                    cout << students[i].get_roll_no() << "\n";
+                }
+                break;
+            case 4:
+                cout << "\nRoll No\t\tName\t\tAttendance\n";
+                for (int i = 0; i < n; i++) {
+                    students[i].print_attendance();
+                }
+                break;
+            case 5:
+                cout << "\nStudents with Attendance Shortage (<75%):\n";
+                cout << "Roll No\t\tName\t\tAttendance\n";
+                for (int i = 0; i < n; i++) {
+                    if (students[i].get_attendance() < 75) {
+                        students[i].print_attendance();
+                    }
+                }
+                break;
+            case 6:
+                show_top_5(students, n);
+                break;
+            case 7:
+                cout << "\nPercentages of students:\n";
+                for (int i = 0; i < n; i++) {
+                    cout << students[i].get_name() << " - " << students[i].get_percentage() << "%\n";
+                }
+                break;
+            case 8:
+                cout << "\nStudents with Percentage above 90%:\n";
+                for (int i = 0; i < n; i++) {
+                    if (students[i].get_percentage() > 90) {
+                        cout << students[i].get_name() << " - " << students[i].get_percentage() << "%\n";
+                    }
+                }
+                break;
+            case 9:
+                cout << "Exiting program.\n";
+                break;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 9);
+
+    return 0;
+}
